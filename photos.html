@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<body>
+
+    {#    -------------------------------- show visible photos ------------------------------------------#}
+    <h1>Visible Photos</h1>
+    <table border="1">
+        <th>pID</th>
+	<th>file url </th>
+	<th>poster</th>
+
+    {% for photo in photos %}
+        <tr>
+            <td>{{photo.pID}}</td>
+            <td><a href="/photos/{{photo.filePath}}" >{{photo.pID}}</a></td>
+            <td>{{photo.poster}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    {% if message %}
+        {{ message }}
+    {% endif %}
+
+    <br/>
+    <a href="/home">Go back</a>
+    </body>
+</html>
