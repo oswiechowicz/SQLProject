@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+
+    {#    -------------------------------- show visible photos ------------------------------------------#}
+
+    <h1>Visible Photos</h1>
+    <table border="1">
+        <th>pID</th>
+        <th>file url </th>
+        <th> posting Date </th>
+        <th>firstName</th>
+        <th>lastName</th>
+       
+        <th>comments</th>
+
+    {% for photo in photos %}
+        {% for p in names %}
+        <tr>
+            <td>{{photo.pID}}</td>
+            <td><a href="/photo/{{photo.filePath}}"> {{photo.pID}}</a></td>
+            <td>{{photo.postingDate}}</td>
+            <td>{{p.firstName}}</td>                
+            <td>{{p.lastName}}</td>
+           
+
+            <td><form action="/comment/{{photo.pID}}"  method="POST">
+            <input type="text" name= "comment" placeholder="Add comments..."> <input type="submit" value="comment">
+
+            <!-- <form action="/comment/{{photo.pID}}"  method="POST">
+            <input type="text" name= "emoji" placeholder="Add emoji">&nbsp&nbsp <input type="submit" value="emoji">
+            </form> -->
+
+            </form></td>
+
+        </tr>
+           
+        {% endfor %}
+    {% endfor %}
+    </table>
+
+<br>
+    <h3>Tagged: </h3>
+    <table border = "1">
+        <th>username</th>
+        <th>firstName</th>
+        <th>lastName</th>
+        {% for tag in tags %}
+            <tr>
+                <td>{{tag.username}}</td>
+                <td>{{tag.firstName}}</td>
+                <td>{{tag.lastName}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+<br>
+
+    <h3>Comments: </h3>
+    <table border = "1">
+    <th>username</th>
+    <th>comment</th>
+    {% for comment in comments %}
+        <tr>
+            <td>{{comment.username}}</td>
+            <td>{{comment.comment}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    {% if message %}
+        {{ message }}
+    {% endif %}
+
+    <br/>
+    <a href="/photos">Go back</a>
+    </body>
+</html>
+
+

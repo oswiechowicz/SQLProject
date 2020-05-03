@@ -1,14 +1,9 @@
 <html>
-<style>
-   
-
-   
-</style>
-    <head>
-        <title>Photo Upload</title>
+	<head>
+    <title>Photo Upload</title>
     </head>
-    <body color= "black" >
-        <h3>Upload a Photo  </h3>
+    <body text= "black" >
+        <h3>Upload a Photo</h3>
         <div>
             <form action="/uploadPhoto" method="post" enctype="multipart/form-data">
                 <input type="file" name="imageToUpload" accept="image/*">
@@ -19,7 +14,7 @@
                 <option name = "All Followers" SELECTED>All Followers</option>
                
                 {% for group in groups%}
-                <option name = "Group Only">Group: {{group.groupName}} | Owner: {{group.owner_username}}</option>"
+                <option name = "Group Only">Group: {{group.groupName}} | groupCreator: {{group.groupCreator}}</option>"
                 {% endfor %}
                 </select>
                 <br/>
@@ -34,6 +29,6 @@
    
 
         <br/>
-        <a href="/">back</a>
+        <a href="/home">Go back</a>
     </body>
 </html>

@@ -1,0 +1,18 @@
+<h1>Photos {{tagged}} was tagged in</h1>
+    <table>
+	<th>pID</th>
+
+    {% for photo in photos %}
+        <tr>
+            <td><a href="/viewPhotos/{{photo.pID}}">{{photo.pID}}</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    {% if message %}
+        {{ message }}
+    {% endif %}
+
+    <br/>
+    <a href="/home">Go back</a>
+    </body>

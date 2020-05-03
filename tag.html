@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+
+    {#    -------------------------------- show visible photos ------------------------------------------#}
+    
+    <h1>Which Photo To Tag?</h1>
+
+
+    <table border="1">
+        <th>pID</th>
+        <th>file url </th>
+        <th> posting Date </th>
+        <th>firstName</th>
+        <th>lastName</th>
+        <th>tagUser</th>
+        <th>Submit</th>
+ 
+
+    {% for photo in photos %}
+        {% for p in names %}
+        <tr>
+            <form action="/savetags" method="POST">
+            <td>{{photo.pID}}</td>
+            <td><a href="/photo/{{photo.filePath}}"> {{photo.pID}}</a></td>
+            <td>{{photo.postingDate}}</td>
+            <td>{{p.firstName}}</td>
+            <td>{{p.lastName}}</td>
+            <td><input type= "text" name = "taggedperson"/></td>
+            <td><input type="submit" value = "Save Tags" /></td>
+            <td><input type= "hidden" name = "pictureid" value={{photo.pID}} /></td>
+            </form>
+        </tr>
+        {% endfor %}
+    {% endfor %}
+
+    </table>
+
+    <table border = "1">
+        <th>username</th>
+        <th>firstName</th>
+        <th>lastName</th>
+        {% for tag in tags %}
+            <tr>
+                <td>{{tag.username}}</td>
+                <td>{{tag.firstName}}</td>
+                <td>{{tag.lastName}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <table border = "1">
+    <th>username</th>
+    <th>comment(emoji)</th>
+    {% for comment in comments %}
+        <tr>
+            <td>{{comment.username}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    {% if message %}
+        {{ message }}
+    {% endif %}
+
+    <br/>
+    <a href="/home">Go back</a>
+
+    </form>
+
+    {% if error %}
+		<p class="error"><strong>Alert:</strong> {{error}}</p>
+	{% endif %}
+
+    </body>
+</html>
+
+
