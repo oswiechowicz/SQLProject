@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+
+    {#    -------------------------------- show visible photos ------------------------------------------#}
+    
+    <h1>Manage Tags</h1>
+
+
+    <table border="1">
+        <th>pID</th>
+        <th>Approve Tag? (1/0)</th>
+        <th>Submit</th>
+ 
+
+    {% for photo in photos %}
+        <tr>
+            <form action="/updateTag" method="POST">
+            <td>{{photo.pID}}</td>
+            <td><input type= "text" name = "tagID"/></td>
+            <td><input type="submit" value = "Save Tags" /></td>
+            <td><input type= "hidden" name = "pictureid" value={{photo.pID}} /></td>
+            </form>
+        </tr>
+    {% endfor %}
+
+    </table>
+
+    <br/>
+    <a href="/home">Go back</a>
+
+    {% if error %}
+		<p class="error"><strong>Alert:</strong> {{error}}</p>
+	{% endif %}
+
+    </body>
+</html>
+
+

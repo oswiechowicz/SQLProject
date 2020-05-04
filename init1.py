@@ -5,7 +5,7 @@ import hashlib
 import os
 import time
 from functools import wraps
-IMAGES_DIR = os.path.join(os.getcwd(), "photos")
+IMAGES_DIR = os.path.join(os.getcwd(), "images")
 
 #Initialize the app from Flask
 app = Flask(__name__)
@@ -301,8 +301,7 @@ def saveFriendGroupToDatabase():
         error = "Group created successfully"
         return render_template('FriendGroup.html', error = error)
     
-#--------Extra Feature #6 - Manage Tags
-#----Define route for tag
+#--------Extra Feature #6 - Manage Tags (Ollie S)
 @app.route("/tag", methods=["GET"])
 @login_required
 def tag():
@@ -335,8 +334,6 @@ def tag():
 
     return render_template("tag.html", photos = data, names = name, tags = tag, comments = comment)
 
-
-
 @app.route("/savetags",methods=['GET', 'POST'])
 @login_required
 def savetags():
@@ -349,7 +346,6 @@ def savetags():
     
     #case 1 self tag
     if (user == taggeduser):
-        #Finstagram adds a row to the Tag table: (x, photoID, true)
         #username, tagStatus, pID
         ins = "INSERT INTO Tag (username, tagStatus, pID) VALUES (%s, %s, %s)"
         cursor.execute(ins, (user, 1, pictureid))
@@ -360,15 +356,12 @@ def savetags():
 
 
     #executes query
-    #query1 = 'SELECT * FROM FriendGroup WHERE groupCreator = %s AND groupName = %s'
-    
     query1 = 'select followStatus from photo ph, follow fo where ph.poster = fo.followee and ph.allFollowers = true and poster=%s and pid = %s and follower  = %s' 
-    
-
-
     cursor.execute(query1, (user, pictureid, taggeduser))
-    #stores the results in a variable
+    
+	#stores the results in a variable
     data = cursor.fetchone()
+    
     if data == None:
         error = "Invalid user specified"
         return render_template('tag.html', error = error)
@@ -381,15 +374,60 @@ def savetags():
         cursor.close()
         conn.commit()
         
-        error = "User successfully tagged"
+        error = "Sent a request for the user to be tagged"
         return render_template('tag.html', error = error)
     
     else:
         error = "Tag failed"
         return render_template('tag.html', error = error)
 
+#6B (Ollie S)
+@app.route("/proposedTag", methods=["GET"])
+@login_required
+def proposedTag():
+    user = session["username"]
+    
+    #query for pID, filePath, postingDate
+    cursor = conn.cursor()
+	
+	#show photos that are not yet approved to be tagged
+    query = "SELECT pID FROM tag WHERE username = %s and tagStatus=0" 
+    cursor.execute(query, (user))   
+    data = cursor.fetchall()
 
-#--------Extra Feature #7 - React to a photo
+    return render_template("proposedTag.html", photos = data)
+@app.route("/updateTag",methods=['GET', 'POST'])
+@login_required
+def updateTag():
+    #cursor used to send queries
+    cursor = conn.cursor()
+    
+    tagID = request.form['tagID']
+    pictureid = request.form['pictureid']
+    
+	#User accepts
+    if (tagID == '1'):
+        upd = "UPDATE Tag SET tagStatus = %s WHERE pID = %s"
+        cursor.execute(upd, (tagID, pictureid))
+        conn.commit()
+        cursor.close()
+        error = "Successfully accepted tag!"	
+        return render_template('proposedTag.html', error = error)
+
+	#User denies
+    elif (tagID == '0'):
+        upd = "DELETE FROM Tag WHERE tagStatus = %s AND pID = %s"
+        cursor.execute(upd, (tagID, pictureid))
+        conn.commit()
+        cursor.close()
+        error = "Successfully rejected tag."
+        return render_template('proposedTag.html', error = error)
+	
+    return render_template('index.html')
+#Feature 6 ends here
+
+
+#--------Extra Feature #7 - React to a photo (Melissa Seksenbayeva)
 @app.route("/comment/<pID>", methods=["GET", "POST"])
 @login_required
 def comment(pID):
@@ -407,7 +445,7 @@ def comment(pID):
 	cursor.close()
 	return redirect(url_for('home'))
 
-#------Extra Feature #9 - Search By Tag
+#------Extra Feature #9 - Search By Tag (Melissa Seksenbayeva)
 @app.route("/searchByTag", methods=["POST"])
 @login_required
 def searchByTag():
